@@ -25,6 +25,7 @@ model Post {
   categoryId Int?
   category   Category?  @relation(fields: [categoryId], references: [id])
   comments   Comment[]
+  tags       PostTag[]
 }
 
 model Category {
@@ -41,4 +42,20 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id])
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Tag {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  posts PostTag[]
+}
+
+model PostTag {
+  id     Int  @id @default(autoincrement())
+  postId Int
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
+
+  @@unique([postId, tagId])
 }

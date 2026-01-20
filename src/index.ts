@@ -123,6 +123,50 @@ app.delete('/categories', async (req, res) => {
   res.json({ message: `Deleted ${result.count} categories` });
 });
 
+// Get all comments
+app.get('/comments', async (req, res) => {
+  const comments = await prisma.comment.findMany({
+    include: { 
+      author: true,
+      post: true 
+    }
+  });
+  res.json(comments);
+});
+
+// Create comment
+app.post('/comments', async (req, res) => {
+  try {
+    const { content, postId, authorId } = req.body;
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        postId,
+        authorId
+      },
+      include: {
+        author: true,
+        post: true
+      }
+    });
+    res.json(comment);
+  } catch (error: any) {
+    if (error.code === 'P2003') {
+      res.status(400).json({ 
+        error: 'Invalid postId or authorId. Make sure the post and user exist first.' 
+      });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
+// Delete all comments
+app.delete('/comments', async (req, res) => {
+  const result = await prisma.comment.deleteMany({});
+  res.json({ message: `Deleted ${result.count} comments` });
+});
+
 const PORT = 3000;
 
 app.listen(PORT, () => {

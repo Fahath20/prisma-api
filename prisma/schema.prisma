@@ -8,10 +8,11 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  name     String?
+  posts    Post[]
+  comments Comment[]
 }
 
 model Post {
@@ -23,10 +24,21 @@ model Post {
   author     User       @relation(fields: [authorId], references: [id])
   categoryId Int?
   category   Category?  @relation(fields: [categoryId], references: [id])
+  comments   Comment[]
 }
 
 model Category {
   id    Int     @id @default(autoincrement())
   name  String  @unique
   posts Post[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
 }

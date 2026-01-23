@@ -170,5 +170,5 @@ app.delete('/comments', async (req, res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-  console.log(`Dev-Fahath Server - Changes done from remote or other person running on http://localhost:${PORT}`);
+  console.log(`Dev-Fahath change from fahath Server running on http://localhost:${PORT}`);
 });
